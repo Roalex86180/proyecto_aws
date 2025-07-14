@@ -190,7 +190,7 @@ resource "aws_launch_template" "app_lt" {
               su - ec2-user -c "source ~/.nvm/nvm.sh && nvm install 18"
 
               # Clonamos el repositorio como ec2-user
-              su - ec2-user -c "git clone https://github.com/tu_usuario/tu_repo_backend.git /home/ec2-user/app"
+              su - ec2-user -c "git clone https://github.com/Roalex86180/proyecto_aws.git /home/ec2-user/app"
 
               # Instalamos dependencias y configuramos variables
               # Nota: La contraseña se maneja de forma segura
@@ -236,6 +236,10 @@ resource "aws_alb" "app_lb" {
 }
 
 resource "aws_alb_target_group" "app_tg" {
+    name     = "mi-app-tg"
+    port     = 3001 # <-- Añade esta línea
+    protocol = "HTTP"
+    vpc_id   = aws_vpc.main.id
   health_check {
     path                = "/" 
     protocol            = "HTTP"

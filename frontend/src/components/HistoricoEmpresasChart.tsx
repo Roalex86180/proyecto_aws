@@ -12,7 +12,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface ApiData {
@@ -32,7 +32,7 @@ const FALLBACK_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FED766', '#7C4DFF'];
 // 2. LA FUNCIÓN DE FETCHING, INDEPENDIENTE
 const fetchHistoricoReincidencias = async (propietarioRed: string | null) => {
     const params = { propietario_red: propietarioRed };
-    const { data } = await axios.get<ApiData[]>(`${API_URL}/api/kpi/reincidencias-historico`, { params });
+    const { data } = await axios.get<ApiData[]>(`/api/kpi/reincidencias-historico`, { params });
     return data;
 };
 
@@ -120,7 +120,7 @@ export default function HistoricoEmpresasChart() {
 // import axios from 'axios';
 // import { Box, Typography, CircularProgress, Paper } from '@mui/material';
 // import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // interface HistoricoProps {
 //   propietario_red: string;
 // }
@@ -159,7 +159,7 @@ export default function HistoricoEmpresasChart() {
 //       setLoading(true);
 //       setError(null);
 //       try {
-//         const response = await axios.get<ApiData[]>(`${API_URL}/api/kpi/reincidencias-historico`, {
+//         const response = await axios.get<ApiData[]>(`/api/kpi/reincidencias-historico`, {
 //           params: { propietario_red }
 //         });
 

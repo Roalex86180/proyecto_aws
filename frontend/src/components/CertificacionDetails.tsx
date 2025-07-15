@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 import LoadingOverlay from './LoadingOverlay';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces ---
 interface TecnicoData {
@@ -41,7 +41,7 @@ const fetchCertificacionDetails = async (
     fecha_inicio: fechaInicio,
     fecha_fin: fechaFin,
   };
-  const { data } = await axios.get<TecnicoData[]>(`${API_URL}/api/certificacion/por-tecnico`, { params });
+  const { data } = await axios.get<TecnicoData[]>(`/api/certificacion/por-tecnico`, { params });
   return data;
 };
 
@@ -175,7 +175,7 @@ export default function CertificacionDetails() {
 // // CAMBIO 1: Se importa D3.js en lugar de Recharts
 // import * as d3 from 'd3';
 // import LoadingOverlay from './LoadingOverlay';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // // --- Interfaces ---
 // interface TecnicoData {
 //   recurso: string;
@@ -323,7 +323,7 @@ export default function CertificacionDetails() {
 //     const fetchData = async () => {
 //       setLoading(true); setError(null);
 //       try {
-//         const response = await axios.get<TecnicoData[]>(`${API_URL}/api/certificacion/por-tecnico`, {
+//         const response = await axios.get<TecnicoData[]>(`/api/certificacion/por-tecnico`, {
 //           // La llamada a axios siempre usa las fechas, ya sean las de los props o las de por defecto
 //           params: { empresa, propietario_red, fecha_inicio: startDate, fecha_fin: endDate }
 //         });

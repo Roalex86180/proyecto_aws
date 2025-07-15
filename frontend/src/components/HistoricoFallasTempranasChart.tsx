@@ -9,7 +9,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface ApiData {
@@ -24,7 +24,7 @@ const COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b'
 // 2. LA FUNCIÓN DE FETCHING, INDEPENDIENTE
 const fetchHistoricoFallas = async (propietarioRed: string | null) => {
     const params = { propietario_red: propietarioRed };
-    const { data } = await axios.get<ApiData[]>(`${API_URL}/api/kpi/fallas-tempranas-historico`, { params });
+    const { data } = await axios.get<ApiData[]>(`/api/kpi/fallas-tempranas-historico`, { params });
     return data;
 };
 
@@ -120,7 +120,7 @@ export default function HistoricoFallasTempranasChart() {
 // import axios from 'axios';
 // import { Box, Typography, CircularProgress, Paper } from '@mui/material';
 // import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 
 // interface HistoricoProps {
 //   propietario_red: string;
@@ -149,7 +149,7 @@ export default function HistoricoFallasTempranasChart() {
 //       setError(null);
 //       try {
 //         // CAMBIO 2: Llama al nuevo endpoint
-//         const response = await axios.get<ApiData[]>(`${API_URL}/api/kpi/fallas-tempranas-historico`, {
+//         const response = await axios.get<ApiData[]>(`/api/kpi/fallas-tempranas-historico`, {
 //           params: { propietario_red }
 //         });
 

@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 import { Dayjs } from 'dayjs';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface ProvisionData {
@@ -36,7 +36,7 @@ const fetchKpiProvision = async (
     fecha_inicio: fechaInicio ? fechaInicio.format('YYYY-MM-DD') : undefined,
     fecha_fin: fechaFin ? fechaFin.format('YYYY-MM-DD') : undefined,
   };
-  const { data } = await axios.get<ProvisionData[]>(`${API_URL}/api/kpi/provision`, { params });
+  const { data } = await axios.get<ProvisionData[]>(`/api/kpi/provision`, { params });
   return data;
 };
 
@@ -114,7 +114,7 @@ export default function KpiProvision() {
 // import { DataGrid } from '@mui/x-data-grid';
 // import type { GridColDef } from '@mui/x-data-grid';
 // import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 
 // // --- Interfaces y Props ---
 // interface ProvisionData {
@@ -166,7 +166,7 @@ export default function KpiProvision() {
 //       setLoading(true);
 //       setError(null);
 //       try {
-//         const response = await axios.get<ProvisionData[]>(`${API_URL}/api/kpi/provision`, {
+//         const response = await axios.get<ProvisionData[]>(`/api/kpi/provision`, {
 //           params: { propietario_red, fecha_inicio, fecha_fin }
 //         });
 //         setData(response.data);

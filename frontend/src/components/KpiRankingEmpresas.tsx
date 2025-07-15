@@ -11,7 +11,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface RankingData {
@@ -36,7 +36,7 @@ const fetchRankingEmpresas = async (
         fecha_inicio: fechaInicio,
         fecha_fin: fechaFin,
     };
-    const { data } = await axios.get<RankingData[]>(`${API_URL}/api/ranking/empresas`, { params });
+    const { data } = await axios.get<RankingData[]>(`/api/ranking/empresas`, { params });
     return data;
 };
 
@@ -150,7 +150,7 @@ export default function KpiRankingEmpresas() {
 // import { DataGrid } from '@mui/x-data-grid';
 // import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 // import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LabelList } from 'recharts';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // // --- Interfaces ---
 // interface RankingData {
 //     empresa: string;
@@ -213,7 +213,7 @@ export default function KpiRankingEmpresas() {
 
 //     const fetchData = async () => {
 //       try {
-//         const response = await axios.get<RankingData[]>(`${API_URL}/api/ranking/empresas`, {
+//         const response = await axios.get<RankingData[]>(`/api/ranking/empresas`, {
 //           params: { 
 //             fecha_inicio: startDate, 
 //             fecha_fin: endDate,

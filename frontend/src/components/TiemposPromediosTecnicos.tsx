@@ -8,7 +8,7 @@ import { Typography, Box, CircularProgress, Alert, Select, MenuItem, FormControl
 import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface ResumenData {
@@ -35,13 +35,13 @@ const formatMinutes = (totalMinutes: number): string => {
 // 2. FUNCIONES DE FETCHING INDEPENDIENTES
 const fetchResumenTiempos = async (empresa: string, propietarioRed: string | null, fechaInicio: string, fechaFin: string) => {
     const params = { empresa, propietario_red: propietarioRed, fecha_inicio: fechaInicio, fecha_fin: fechaFin };
-    const { data } = await axios.get<ResumenData>(`${API_URL}/api/tiempos/por-empresa`, { params });
+    const { data } = await axios.get<ResumenData>(`/api/tiempos/por-empresa`, { params });
     return data;
 };
 
 const fetchDetalleTecnico = async (empresa: string, tecnico: string, fechaInicio: string, fechaFin: string) => {
     const params = { empresa, tecnico, fecha_inicio: fechaInicio, fecha_fin: fechaFin };
-    const { data } = await axios.get<DetalleTecnico[]>(`${API_URL}/api/tiempos/detalle-por-tecnico`, { params });
+    const { data } = await axios.get<DetalleTecnico[]>(`/api/tiempos/detalle-por-tecnico`, { params });
     return data;
 };
 
@@ -153,182 +153,3 @@ export default function TiemposPromediosTecnicos() {
     );
 }
 
-// // src/components/TiemposPromediosTecnicos.tsx (Con Layout Vertical Corregido)
-
-// import { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import {
-//     Typography, Box, CircularProgress, Alert, Select, MenuItem, FormControl, InputLabel,
-//     Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
-// } from '@mui/material';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
-// // --- Interfaces y Función de Formato (sin cambios) ---
-// interface ResumenData {
-//     tecnicoMasRapido: { nombre: string; promedio_minutos: number };
-//     tecnicoMasLento: { nombre: string; promedio_minutos: number };
-//     promedioPorActividad: { actividad: string; promedio_minutos: number }[];
-//     tecnicos: { nombre: string }[];
-// }
-// interface DetalleTecnico {
-//     "Recurso": string;
-//     "Tipo de actividad": string;
-//     "tiempo_promedio": number;
-// }
-// interface KpiProps {
-//     empresa: string | null;
-//     propietario_red: string;
-//     fecha_inicio?: string;
-//     fecha_fin?: string;
-// }
-// const formatMinutes = (totalMinutes: number): string => {
-//     if (typeof totalMinutes !== 'number' || isNaN(totalMinutes) || totalMinutes === 0) return "N/A";
-//     const hours = Math.floor(totalMinutes / 60);
-//     const minutes = Math.round(totalMinutes % 60);
-//     if (hours > 0) return minutes > 0 ? `${hours}h ${minutes} min` : `${hours}h`;
-//     return `${minutes} min`;
-// };
-
-
-// export default function TiemposPromediosTecnicos({ empresa, propietario_red, fecha_inicio, fecha_fin }: KpiProps) {
-//     const [resumen, setResumen] = useState<ResumenData | null>(null);
-//     const [selectedTecnico, setSelectedTecnico] = useState<string>('');
-//     const [detalleTecnico, setDetalleTecnico] = useState<DetalleTecnico[]>([]);
-//     const [loading, setLoading] = useState<boolean>(false);
-//     const [loadingDetalle, setLoadingDetalle] = useState<boolean>(false);
-//     const [error, setError] = useState<string | null>(null);
-
-//     // --- Lógica de useEffects (sin cambios) ---
-//     useEffect(() => {
-//         if (!empresa) {
-//             setLoading(false); setResumen(null); return;
-//         }
-//         const fetchData = async () => {
-//             setLoading(true); setError(null); setResumen(null); setSelectedTecnico(''); setDetalleTecnico([]);
-//             try {
-//                 const today = new Date();
-//                 const oneYearAgo = new Date();
-//                 oneYearAgo.setFullYear(today.getFullYear() - 1);
-//                 const toISO = (date: Date) => date.toISOString().split('T')[0];
-
-//                 const params = { 
-//                     empresa, 
-//                     propietario_red,
-//                     fecha_inicio: fecha_inicio || toISO(oneYearAgo),
-//                     fecha_fin: fecha_fin || toISO(today),
-//                 };
-//                 const response = await axios.get<ResumenData>(`${API_URL}/api/tiempos/por-empresa`, { params });
-                
-//                 const data = response.data;
-//                 if (data.promedioPorActividad) {
-//                     data.promedioPorActividad.forEach(item => item.promedio_minutos = parseFloat(item.promedio_minutos as any));
-//                 }
-//                 if (data.tecnicoMasRapido) data.tecnicoMasRapido.promedio_minutos = parseFloat(data.tecnicoMasRapido.promedio_minutos as any);
-//                 if (data.tecnicoMasLento) data.tecnicoMasLento.promedio_minutos = parseFloat(data.tecnicoMasLento.promedio_minutos as any);
-
-//                 setResumen(data);
-//             } catch (err) {
-//                 console.error("Error al buscar resumen:", err);
-//                 setError(`No se encontraron datos de resumen para la empresa ${empresa}.`);
-//             } finally { setLoading(false); }
-//         };
-//         fetchData();
-//     }, [empresa, fecha_inicio, fecha_fin, propietario_red]);
-
-//     useEffect(() => {
-//         if (!selectedTecnico || !empresa) return;
-//         const fetchDetailData = async () => {
-//             setLoadingDetalle(true); setDetalleTecnico([]);
-//             try {
-//                 const today = new Date();
-//                 const oneYearAgo = new Date();
-//                 oneYearAgo.setFullYear(today.getFullYear() - 1);
-//                 const toISO = (date: Date) => date.toISOString().split('T')[0];
-//                 const params = {
-//                     empresa,
-//                     tecnico: selectedTecnico,
-//                     fecha_inicio: fecha_inicio || toISO(oneYearAgo),
-//                     fecha_fin: fecha_fin || toISO(today),
-//                 };
-//                 const response = await axios.get<any[]>(`${API_URL}/api/tiempos/detalle-por-tecnico`, { params });
-//                 const parsedDetail: DetalleTecnico[] = response.data.map(item => ({ ...item, tiempo_promedio: parseFloat(item.tiempo_promedio) }));
-//                 setDetalleTecnico(parsedDetail);
-//             } catch (err) {
-//                 console.error("Error al buscar detalle de técnico:", err);
-//             } finally { setLoadingDetalle(false); }
-//         };
-//         fetchDetailData();
-//     }, [selectedTecnico, empresa, fecha_inicio, fecha_fin]);
-
-
-//     if (!empresa) {
-//         return <Alert severity="info" sx={{ mt: 2 }}>Por favor, seleccione una empresa en los filtros superiores para ver el análisis.</Alert>;
-//     }
-//     if (loading) return <CircularProgress sx={{ display: 'block', margin: '4rem auto' }} />;
-//     if (error) return <Alert severity="warning" sx={{ mt: 4 }}>{error}</Alert>;
-//     if (!resumen) return <Typography sx={{mt:4, textAlign:'center'}}>No hay datos de resumen para la empresa seleccionada.</Typography>;
-
-//     return (
-//         <Box>
-//             <Typography variant="h5" sx={{mb: 2}} gutterBottom>Tiempos Promedios para: <b>{empresa}</b></Typography>
-
-//             {/* --- INICIO DEL LAYOUT VERTICAL CORREGIDO --- */}
-            
-//             {/* 1. Resumen de Rendimiento */}
-//             <Paper sx={{ p: 2, mb: 3 }}>
-//                 <Typography variant="h6">🏆 Resumen de Rendimiento</Typography>
-//                 <Typography>Técnico más rápido: <b>{resumen.tecnicoMasRapido?.nombre || 'N/A'}</b> ({formatMinutes(resumen.tecnicoMasRapido?.promedio_minutos)})</Typography>
-//                 <Typography>Técnico más lento: <b>{resumen.tecnicoMasLento?.nombre || 'N/A'}</b> ({formatMinutes(resumen.tecnicoMasLento?.promedio_minutos)})</Typography>
-//             </Paper>
-
-//             {/* 2. Tabla de Tiempos por Actividad */}
-//             <TableContainer component={Paper} sx={{ mb: 3 }}>
-//                 <Table size="small">
-//                     <TableHead>
-//                         <TableRow>
-//                             <TableCell sx={{backgroundColor:'#1D66A5',color:'white', fontWeight: 'bold'}}>Tipo de Actividad</TableCell>
-//                             <TableCell sx={{backgroundColor:'#1D66A5',color:'white', fontWeight: 'bold'}} align="right">Tiempo Promedio</TableCell>
-//                         </TableRow>
-//                     </TableHead>
-//                     <TableBody>
-//                         {resumen.promedioPorActividad?.map(row => (
-//                             <TableRow key={row.actividad}><TableCell>{row.actividad}</TableCell><TableCell align="right">{formatMinutes(row.promedio_minutos)}</TableCell></TableRow>
-//                         ))}
-//                     </TableBody>
-//                 </Table>
-//             </TableContainer>
-
-//             {/* 3. Sección de Análisis por Técnico */}
-//             <Paper sx={{ p: 2 }}>
-//                  <Typography variant="h6" gutterBottom>Análisis Detallado por Técnico</Typography>
-//                  <FormControl fullWidth sx={{mb: 2}}>
-//                     <InputLabel>Seleccionar Técnico</InputLabel>
-//                     <Select value={selectedTecnico} label="Seleccionar Técnico" onChange={(e) => setSelectedTecnico(e.target.value)}>
-//                         {resumen.tecnicos?.map(t => <MenuItem key={t.nombre} value={t.nombre}>{t.nombre}</MenuItem>)}
-//                     </Select>
-//                  </FormControl>
-
-//                  {loadingDetalle && <CircularProgress size={24} />}
-                 
-//                  {detalleTecnico.length > 0 && !loadingDetalle && (
-//                     <TableContainer>
-//                          <Table>
-//                             <TableHead>
-//                                 <TableRow>
-//                                     <TableCell sx={{backgroundColor:'#1D66A5',color:'white', fontWeight: 'bold'}}>Recurso</TableCell>
-//                                     <TableCell sx={{backgroundColor:'#1D66A5',color:'white', fontWeight: 'bold'}}>Tipo de Actividad</TableCell>
-//                                     <TableCell sx={{backgroundColor:'#1D66A5',color:'white', fontWeight: 'bold'}} align="right">Tiempo Promedio</TableCell>
-//                                 </TableRow>
-//                             </TableHead>
-//                             <TableBody>
-//                                 {detalleTecnico.map((row, index) => (
-//                                     <TableRow key={`${row["Recurso"]}-${index}`}><TableCell>{row["Recurso"]}</TableCell><TableCell>{row["Tipo de actividad"]}</TableCell><TableCell align="right">{formatMinutes(row.tiempo_promedio)}</TableCell></TableRow>
-//                                 ))}
-//                             </TableBody>
-//                          </Table>
-//                     </TableContainer>
-//                  )}
-//             </Paper>
-//             {/* --- FIN DEL LAYOUT CORREGIDO --- */}
-//         </Box>
-//     );
-// }

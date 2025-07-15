@@ -10,7 +10,7 @@ import { useFilterStore } from '../store/filterStore';
 import { Dayjs } from 'dayjs';
 import LoadingOverlay from './LoadingOverlay';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface Desglose {
@@ -36,7 +36,7 @@ const fetchDistribucionFallasTempranas = async (
         fecha_inicio: fechaInicio ? fechaInicio.format('YYYY-MM-DD') : undefined,
         fecha_fin: fechaFin ? fechaFin.format('YYYY-MM-DD') : undefined,
     };
-    const { data } = await axios.get<ApiResponse>(`${API_URL}/api/kpi/distribucion-fallas-tempranas`, { params });
+    const { data } = await axios.get<ApiResponse>(`/api/kpi/distribucion-fallas-tempranas`, { params });
     return data;
 };
 
@@ -92,7 +92,7 @@ export default function KpiDistribucionFallasTempranas() {
 // import axios from 'axios';
 // import { Typography, Box, Paper, CircularProgress } from '@mui/material';
 // import LoadingOverlay from './LoadingOverlay';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // // --- Interfaces para la nueva estructura de datos ---
 // interface Desglose {
 //   tipo_actividad: string;
@@ -142,7 +142,7 @@ export default function KpiDistribucionFallasTempranas() {
 //       setLoading(true);
 //       setError(null);
 //       try {
-//         const response = await axios.get<ApiResponse>(`${API_URL}/api/kpi/distribucion-fallas-tempranas`, {
+//         const response = await axios.get<ApiResponse>(`/api/kpi/distribucion-fallas-tempranas`, {
 //           params: { fecha_inicio, fecha_fin }
 //         });
 //         setData(response.data);

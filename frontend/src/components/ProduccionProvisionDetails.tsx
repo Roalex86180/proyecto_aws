@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 import LoadingOverlay from './LoadingOverlay';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface TecnicoData {
@@ -36,7 +36,7 @@ const fetchProduccionProvisionDetails = async (
     fechaFin: string
 ) => {
     const params = { empresa, propietario_red: propietarioRed, fecha_inicio: fechaInicio, fecha_fin: fechaFin };
-    const { data } = await axios.get<TecnicoData[]>(`${API_URL}/api/produccion/provision-tecnico`, { params });
+    const { data } = await axios.get<TecnicoData[]>(`/api/produccion/provision-tecnico`, { params });
     return data;
 };
 
@@ -176,7 +176,7 @@ export default function ProduccionProvisionDetails() {
 // import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 // import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ReferenceLine, Cell } from 'recharts';
 // import LoadingOverlay from './LoadingOverlay';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // // --- Interfaces ---
 // interface TecnicoData {
 //   recurso: string;
@@ -253,7 +253,7 @@ export default function ProduccionProvisionDetails() {
 //     const fetchData = async () => {
 //       setLoading(true); setError(null);
 //       try {
-//         const response = await axios.get<TecnicoData[]>(`${API_URL}/api/produccion/provision-tecnico`, {
+//         const response = await axios.get<TecnicoData[]>(`/api/produccion/provision-tecnico`, {
 //           params: { empresa, propietario_red, fecha_inicio: startDate, fecha_fin: endDate }
 //         });
 //         const parsedData: ParsedTecnicoData[] = response.data.map(d => ({

@@ -13,7 +13,7 @@ import { useFilterStore } from '../store/filterStore';
 import { Dayjs } from 'dayjs';
 import LoadingOverlay from './LoadingOverlay';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface ReincidenciaData {
@@ -34,7 +34,7 @@ const fetchKpiReincidencias = async (
         fecha_inicio: fechaInicio ? fechaInicio.format('YYYY-MM-DD') : undefined,
         fecha_fin: fechaFin ? fechaFin.format('YYYY-MM-DD') : undefined,
     };
-    const { data } = await axios.get<ReincidenciaData[]>(`${API_URL}/api/kpi/reincidencias`, { params });
+    const { data } = await axios.get<ReincidenciaData[]>(`/api/kpi/reincidencias`, { params });
     return data;
 };
 
@@ -143,7 +143,7 @@ export default function KpiReincidencias() {
 // import type { GridColDef } from '@mui/x-data-grid';
 // import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 // import LoadingOverlay from './LoadingOverlay';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // // --- Interfaces y Props ---
 // interface ReincidenciaData {
 //   empresa: string;
@@ -199,7 +199,7 @@ export default function KpiReincidencias() {
 //       setError(null);
 //       try {
 //         // Ahora pasamos todos los filtros al backend
-//         const response = await axios.get<ReincidenciaData[]>(`${API_URL}/api/kpi/reincidencias`, {
+//         const response = await axios.get<ReincidenciaData[]>(`/api/kpi/reincidencias`, {
 //           params: { propietario_red, fecha_inicio, fecha_fin }
 //         });
 //         setData(response.data);

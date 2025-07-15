@@ -1,0 +1,68 @@
+/* src/App.css */
+
+#root {
+  width: 100%; /* Asegura que #root ocupe todo el ancho disponible del body */
+  min-height: 100vh; /* Asegura que #root ocupe al menos toda la altura del viewport */
+  display: flex; /* Convierte #root en un contenedor flex */
+  flex-direction: column; /* Apila sus hijos (tu componente App) verticalmente */
+  /* NO NECESITAS max-width, margin: auto, padding, ni text-align aquí,
+     porque tu componente App.tsx ya manejará el centrado y ancho máximo interno. */
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Puedes añadir cualquier otro estilo específico de tu aplicación aquí abajo */
+/* Por ejemplo, si tenías estilos para DataGrid o Cards que se usan globalmente en la app */
+
+/* Ejemplo de estilos de DataGrid que podrías tener en App.css si son globales */
+/*
+.kpi-positive {
+  color: #388E3C;
+  font-weight: 600;
+}
+.kpi-negative {
+  color: #D32F2F;
+  font-weight: 600;
+}
+.reincidence-highlight {
+  background-color: #FFC7CE;
+  color: #9C0006;
+}
+.reincidence-highlight:hover {
+  background-color: #FFB3BD;
+}
+*/

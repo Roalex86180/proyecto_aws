@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface FallaTempranaData {
@@ -33,7 +33,7 @@ const fetchFallasTempranasResumen = async (
         fecha_inicio: fechaInicio,
         fecha_fin: fechaFin,
     };
-    const { data } = await axios.get<FallaTempranaData[]>(`${API_URL}/api/kpi/fallas-tempranas`, { params });
+    const { data } = await axios.get<FallaTempranaData[]>(`/api/kpi/fallas-tempranas`, { params });
     return data;
 };
 
@@ -142,7 +142,7 @@ export default function FallasTempranasResumen() {
 // import type { GridColDef } from '@mui/x-data-grid';
 // // CAMBIO 1: Se importan los componentes necesarios de Recharts
 // import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList, Legend } from 'recharts';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 
 
 // // --- Interfaces para los datos y las props ---
@@ -212,7 +212,7 @@ export default function FallasTempranasResumen() {
 //       setLoading(true);
 //       setError(null);
 //       try {
-//         const response = await axios.get<FallaTempranaData[]>(`${API_URL}/api/kpi/fallas-tempranas`, {
+//         const response = await axios.get<FallaTempranaData[]>(`/api/kpi/fallas-tempranas`, {
 //           params: { propietario_red, fecha_inicio: startDate, fecha_fin: endDate }
 //         });
 //         setData(response.data);

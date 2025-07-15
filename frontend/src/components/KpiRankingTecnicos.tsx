@@ -9,7 +9,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface RankingData {
@@ -30,7 +30,7 @@ const fetchRankingTecnicos = async (
         fecha_inicio: fechaInicio,
         fecha_fin: fechaFin,
     };
-    const { data } = await axios.get<RankingData[]>(`${API_URL}/api/ranking/tecnicos`, { params });
+    const { data } = await axios.get<RankingData[]>(`/api/ranking/tecnicos`, { params });
     return data;
 };
 
@@ -122,7 +122,7 @@ export default function KpiRankingTecnicos() {
 // import { Typography, Box, CircularProgress, Alert } from '@mui/material';
 // import { DataGrid} from '@mui/x-data-grid';
 // import type { GridColDef, GridRenderCellParams  } from '@mui/x-data-grid';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // // --- Interfaces ---
 // interface RankingData {
 //     Empresa: string;
@@ -158,7 +158,7 @@ export default function KpiRankingTecnicos() {
 
 //     const fetchData = async () => {
 //       try {
-//         const response = await axios.get<RankingData[]>(`${API_URL}/api/ranking/tecnicos`, {
+//         const response = await axios.get<RankingData[]>(`/api/ranking/tecnicos`, {
 //           params: { 
 //             fecha_inicio: startDate, 
 //             fecha_fin: endDate,

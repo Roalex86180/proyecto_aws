@@ -13,7 +13,7 @@ import { useFilterStore } from '../store/filterStore';
 import { Dayjs } from 'dayjs';
 import LoadingOverlay from './LoadingOverlay';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface MantencionData {
@@ -35,7 +35,7 @@ const fetchKpiMantencion = async (
     fecha_inicio: fechaInicio ? fechaInicio.format('YYYY-MM-DD') : undefined,
     fecha_fin: fechaFin ? fechaFin.format('YYYY-MM-DD') : undefined,
   };
-  const { data } = await axios.get<MantencionData[]>(`${API_URL}/api/kpi/mantencion`, { params });
+  const { data } = await axios.get<MantencionData[]>(`/api/kpi/mantencion`, { params });
   return data;
 };
 
@@ -119,7 +119,7 @@ export default function KpiMantencion() {
 // import type { GridColDef } from '@mui/x-data-grid';
 // import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 // import LoadingOverlay from './LoadingOverlay';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // // --- Interfaces y Props ---
 // interface MantencionData {
 //   empresa: string;
@@ -170,7 +170,7 @@ export default function KpiMantencion() {
 //       setLoading(true);
 //       setError(null);
 //       try {
-//         const response = await axios.get<MantencionData[]>(`${API_URL}/api/kpi/mantencion`, {
+//         const response = await axios.get<MantencionData[]>(`/api/kpi/mantencion`, {
 //           params: { propietario_red, fecha_inicio, fecha_fin }
 //         });
 //         setData(response.data);

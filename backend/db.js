@@ -1,29 +1,21 @@
 // db.js
+require('dotenv').config();
 const { Pool } = require('pg');
 
-const config = {};
+console.log("Iniciando conexión a la base de datos...");
+console.log(`Host: ${process.env.PGHOST}, Usuario: ${process.env.PGUSER}`);
 
-if (process.env.DATABASE_URL) {
-  // Producción (RDS en EB): conexión via URL + SSL
-  console.log("Producción: Usando DATABASE_URL con SSL.");
-  config.connectionString = process.env.DATABASE_URL;
-  config.ssl = { rejectUnauthorized: false };
-} else {
-  // Desarrollo local: variables separadas
-  console.log("Entorno local: variables separadas para conexión.");
-  console.log("DEBUG: PGPASSWORD =", process.env.PGPASSWORD, "tipo:", typeof process.env.PGPASSWORD);
-
-  config.host = process.env.PGHOST;
-  config.user = process.env.PGUSER;
-  config.password = process.env.PGPASSWORD;
-  config.database = process.env.PGDATABASE;
-  config.port = parseInt(process.env.PGPORT, 10) || 5432;
-
-  // Hacer que el cliente use SSL incluso en local
-  config.ssl = { rejectUnauthorized: false };  // fuerza sslmode=require
-}
-
-const pool = new Pool(config);
+const pool = new Pool({
+  host: process.env.PGHOST,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
+  port: parseInt(process.env.PGPORT, 10),
+  // Esta configuración es clave para conectar a AWS RDS
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 module.exports = {
   query: (text, params) => pool.query(text, params),

@@ -10,7 +10,7 @@ import { useFilterStore } from '../store/filterStore';
 import { Dayjs } from 'dayjs';
 import { useMemo } from 'react'; // Importamos useMemo
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces ---
 interface KpiChartData {
@@ -32,7 +32,7 @@ const fetchKpiMultiskill = async (
     fecha_fin: fechaFin ? fechaFin.format('YYYY-MM-DD') : undefined,
   };
   // Apuntamos al mismo endpoint que el componente anterior
-  const { data } = await axios.get<KpiChartData[]>(`${API_URL}/api/kpi/multiskill`, { params });
+  const { data } = await axios.get<KpiChartData[]>(`/api/kpi/multiskill`, { params });
   return data;
 };
 
@@ -134,7 +134,7 @@ export default function KpiMultiskillChart() {
 // import axios from 'axios';
 // import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList} from 'recharts';
 // import { Typography, Box, CircularProgress } from '@mui/material';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 
 
 // // --- Interfaces (sin cambios) ---
@@ -191,7 +191,7 @@ export default function KpiMultiskillChart() {
 //       setLoading(true);
 //       setError(null);
 //       try {
-//         const response = await axios.get<KpiChartData[]>(`${API_URL}/api/kpi/multiskill`, {
+//         const response = await axios.get<KpiChartData[]>(`/api/kpi/multiskill`, {
 //           params: { propietario_red, fecha_inicio, fecha_fin }
 //         });
 //         const processedData = response.data

@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 import React from 'react'; // Importamos React para usarlo
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface CertificacionData {
@@ -32,7 +32,7 @@ const fetchKpiCertificacion = async (
         fecha_inicio: fechaInicio,
         fecha_fin: fechaFin,
     };
-    const { data } = await axios.get<CertificacionData[]>(`${API_URL}/api/kpi/certificacion`, { params });
+    const { data } = await axios.get<CertificacionData[]>(`/api/kpi/certificacion`, { params });
     return data;
 };
 
@@ -143,7 +143,7 @@ export default function KpiCertificacionResumen() {
 // import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 // // CAMBIO 1: Se importan los componentes de Recharts para el gráfico.
 // import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList, Legend } from 'recharts';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // // --- Interfaces ---
 // interface CertificacionData {
 //   empresa: string;
@@ -209,7 +209,7 @@ export default function KpiCertificacionResumen() {
 //       setLoading(true);
 //       setError(null);
 //       try {
-//         const response = await axios.get<CertificacionData[]>(`${API_URL}/api/kpi/certificacion`, {
+//         const response = await axios.get<CertificacionData[]>(`/api/kpi/certificacion`, {
 //           params: { propietario_red, fecha_inicio: startDate, fecha_fin: endDate }
 //         });
 //         setData(response.data);

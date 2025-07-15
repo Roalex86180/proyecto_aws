@@ -12,7 +12,7 @@ import ReactECharts from 'echarts-for-react';
 import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces ---
 interface StatsData {
@@ -33,7 +33,7 @@ const fetchCalidadPorComuna = async (
     fechaFin: string
 ) => {
     const params = { propietario_red: propietarioRed, fecha_inicio: fechaInicio, fecha_fin: fechaFin };
-    const { data } = await axios.get<StatsData[]>(`${API_URL}/api/calidad/por-comuna`, { params });
+    const { data } = await axios.get<StatsData[]>(`/api/calidad/por-comuna`, { params });
     return data.map(item => ({
         ...item,
         total_reincidencias: Number(item.total_reincidencias) || 0,
@@ -177,7 +177,7 @@ export default function CalidadPorComuna() {
 // } from '@mui/material';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // import ReactECharts from 'echarts-for-react';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // interface StatsData {
 //   comuna: string;
 //   empresa: string;
@@ -290,7 +290,7 @@ export default function CalidadPorComuna() {
 //       setLoading(true);
 //       setError(null);
 //       try {
-//         const response = await axios.get<StatsData[]>(`${API_URL}/api/calidad/por-comuna`, {
+//         const response = await axios.get<StatsData[]>(`/api/calidad/por-comuna`, {
 //         params: { propietario_red, fecha_inicio, fecha_fin }});
 //         setData(response.data);
 //       } catch (err) {

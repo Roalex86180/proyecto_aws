@@ -1,0 +1,73 @@
+/* src/index.css */
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; /* Asegúrate de que esto esté presente */
+  box-sizing: border-box; /* Fundamental */
+  -webkit-text-size-adjust: 100%;
+  height: 100%; /* HTML debe ocupar el 100% de la altura de la ventana */
+}
+
+body {
+  margin: 0 !important; /* Forza margen 0 para anular el del user-agent */
+  padding: 0; /* Asegura que no haya padding */
+  display: flex !important; /* Forza display: flex */
+  flex-direction: column; /* Apila los elementos verticalmente (útil para que #root sea el único hijo y crezca) */
+  align-items: center; /* Centra horizontalmente el contenido del body (en este caso, #root) */
+  min-width: 320px;
+  min-height: 100vh; /* Ocupa el 100% de la altura del viewport */
+
+  /* Estilos de fuente y color que ya tenías */
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; /* Usar 'system-ui' es buena práctica */
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87); /* Color por defecto, ajustado por prefers-color-scheme */
+  background-color: #242424; /* Color de fondo por defecto, ajustado por prefers-color-scheme */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* También reinicia el comportamiento de links y botones si no lo hace Material-UI */
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}

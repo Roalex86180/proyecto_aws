@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 import LoadingOverlay from './LoadingOverlay';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface KpiData {
@@ -31,7 +31,7 @@ const fetchCertificacionReincidencia = async (
         fecha_inicio: fechaInicio,
         fecha_fin: fechaFin,
     };
-    const { data } = await axios.get<KpiData[]>(`${API_URL}/api/kpi/certificacion-vs-reincidencia`, { params });
+    const { data } = await axios.get<KpiData[]>(`/api/kpi/certificacion-vs-reincidencia`, { params });
     return data;
 };
 
@@ -91,7 +91,7 @@ export default function KpiCertificacionReincidencia() {
 // import axios from 'axios';
 // import { Typography, Box, Paper, CircularProgress, Alert, Divider } from '@mui/material';
 // import LoadingOverlay from './LoadingOverlay';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 
 // // CAMBIO 1: Se ajusta la interfaz a los datos que ahora envía el backend
 // interface KpiData {
@@ -127,7 +127,7 @@ export default function KpiCertificacionReincidencia() {
 //       setLoading(true);
 //       setError(null);
 //       try {
-//         const response = await axios.get<KpiData[]>(`${API_URL}/api/kpi/certificacion-vs-reincidencia`, {
+//         const response = await axios.get<KpiData[]>(`/api/kpi/certificacion-vs-reincidencia`, {
 //           params: { propietario_red, fecha_inicio: startDate, fecha_fin: endDate }
 //         });
 //         setData(response.data);

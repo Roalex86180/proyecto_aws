@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // Interfaz para el tipado de los datos de las tablas
 interface TrabajoPorComuna {
@@ -24,11 +24,11 @@ const fetchProduccionGeografica = async (
     fechaInicio: string,
     fechaFin: string
 ) => {
-    console.log('API_URL en fetchProduccionGeografica:', API_URL);
-    console.log('VITE_API_URL from env:', import.meta.env.VITE_API_URL);
+    
+    
     const apiParams = { propietario_red: propietarioRed, fecha_inicio: fechaInicio, fecha_fin: fechaFin };
-    const reparacionesPromise = axios.get<TrabajoPorComuna[]>(`${API_URL}/api/produccion/reparaciones-por-comuna`, { params: apiParams });
-    const instalacionesPromise = axios.get<TrabajoPorComuna[]>(`${API_URL}/api/produccion/instalaciones-por-comuna`, { params: apiParams });
+    const reparacionesPromise = axios.get<TrabajoPorComuna[]>(`/api/produccion/reparaciones-por-comuna`, { params: apiParams });
+    const instalacionesPromise = axios.get<TrabajoPorComuna[]>(`/api/produccion/instalaciones-por-comuna`, { params: apiParams });
 
     const [resReparaciones, resInstalaciones] = await Promise.all([
         reparacionesPromise,
@@ -97,7 +97,7 @@ export default function ProduccionGeografica() {
 // import { Typography, Box, Alert } from '@mui/material';
 // import ComunaDataTable from './ComunaDataTable';
 // import MapaDeTrabajos from './MapaDeTrabajos';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // // Recibe los filtros desde HomePage
 // interface PageProps {
 //   propietario_red: string;
@@ -133,8 +133,8 @@ export default function ProduccionGeografica() {
 //         const apiParams = { propietario_red, fecha_inicio: startDate, fecha_fin: endDate };
         
 //         const [resReparaciones, resInstalaciones] = await Promise.all([
-//         axios.get(`${API_URL}/api/produccion/reparaciones-por-comuna`, { params: apiParams }),
-//         axios.get(`${API_URL}/api/produccion/instalaciones-por-comuna`, { params: apiParams })
+//         axios.get(`/api/produccion/reparaciones-por-comuna`, { params: apiParams }),
+//         axios.get(`/api/produccion/instalaciones-por-comuna`, { params: apiParams })
 //       ]);
 
 //         setReparacionesData(resReparaciones.data);

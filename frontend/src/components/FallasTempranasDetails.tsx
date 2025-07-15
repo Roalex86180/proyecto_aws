@@ -10,7 +10,7 @@ import type { GridColDef, GridRowClassNameParams, GridRowParams, GridRenderCellP
 import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 import LoadingOverlay from './LoadingOverlay';
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 // --- Interfaces ---
 interface ApiFallaTempranaTecnicoData {
   recurso: string;
@@ -42,15 +42,15 @@ interface EvolucionFallaData {
 // --- Funciones de Fetching ---
 const fetchMainFallasData = async (empresa: string, propietarioRed: string | null, fechaInicio: string, fechaFin: string) => {
     const params = { empresa, propietario_red: propietarioRed, fecha_inicio: fechaInicio, fecha_fin: fechaFin };
-    const { data } = await axios.get<ApiFallaTempranaTecnicoData[]>(`${API_URL}/api/fallas-tempranas/por-tecnico`, { params });
+    const { data } = await axios.get<ApiFallaTempranaTecnicoData[]>(`/api/fallas-tempranas/por-tecnico`, { params });
     return data;
 };
 
 const fetchAllFallaDetails = async (empresa: string, tecnico: string, fechaInicio: string, fechaFin: string) => {
-    const detailPromise = axios.get<DetalleFallaData[]>(`${API_URL}/api/fallas-tempranas/detalle-tecnico`, {
+    const detailPromise = axios.get<DetalleFallaData[]>(`/api/fallas-tempranas/detalle-tecnico`, {
         params: { empresa, recurso: tecnico, fecha_inicio: fechaInicio, fecha_fin: fechaFin }
     });
-    const evolutionPromise = axios.get<ApiEvolucionFallaData[]>(`${API_URL}/api/fallas-tempranas/evolucion-tecnico`, {
+    const evolutionPromise = axios.get<ApiEvolucionFallaData[]>(`/api/fallas-tempranas/evolucion-tecnico`, {
         params: { empresa, recurso: tecnico }
     });
     const [detailResponse, evolutionResponse] = await Promise.all([detailPromise, evolutionPromise]);
@@ -240,7 +240,7 @@ export default function FallasTempranasDetails() {
 // import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 // import type { GridColDef, GridRowClassNameParams, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
 // import LoadingOverlay from './LoadingOverlay';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 
 // // --- Interfaces ---
 // interface ApiFallaTempranaTecnicoData {
@@ -306,7 +306,7 @@ export default function FallasTempranasDetails() {
 //     const fetchData = async () => {
 //       setLoading(true); setError(null);
 //       try {
-//         const response = await axios.get<ApiFallaTempranaTecnicoData[]>(`${API_URL}/api/fallas-tempranas/por-tecnico`, {
+//         const response = await axios.get<ApiFallaTempranaTecnicoData[]>(`/api/fallas-tempranas/por-tecnico`, {
 //           params: { empresa, propietario_red, fecha_inicio: startDate, fecha_fin: endDate }
 //         });
 //         const parsedData: FallaTempranaTecnicoData[] = response.data.map(row => ({
@@ -331,7 +331,7 @@ export default function FallasTempranasDetails() {
 //     const fetchDetailData = async () => {
 //       setDetailLoading(true); setDetailError(null);
 //       try {
-//         const response = await axios.get<DetalleFallaData[]>(`${API_URL}/api/fallas-tempranas/detalle-tecnico`, {
+//         const response = await axios.get<DetalleFallaData[]>(`/api/fallas-tempranas/detalle-tecnico`, {
 //           params: { empresa, recurso: selectedTechnician, fecha_inicio: activeDateRange?.start, fecha_fin: activeDateRange?.end }
 //         });
 //         setDetailData(response.data);

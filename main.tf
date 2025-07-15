@@ -174,51 +174,40 @@ data "aws_ssm_parameter" "amazon_linux_2" {
 
 resource "aws_launch_template" "app_lt" {
   name_prefix   = "mi-app-lt-"
-  image_id      = data.aws_ssm_parameter.amazon_linux_2.value # ID dinámico y correcto para tu región
-  instance_type = "t2.micro"             # Parte de la capa gratuita
-  key_name      = "dashboard-clave" # IMPORTANTE: Reemplaza con tu key pair
+  image_id      = data.aws_ssm_parameter.amazon_linux_2.value
+  instance_type = "t2.micro"
+  key_name      = "dashboard-clave"
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 
   user_data = base64encode(<<-EOF
               #!/bin/bash
-              # Actualizamos e INSTALAMOS GIT
+              # Salir inmediatamente si cualquier comando falla
+              set -e
+
+              # 1. Instalar dependencias como root
               yum update -y
               yum install -y git
 
-              # Instalamos NVM y Node.js para el usuario ec2-user
+              # 2. Instalar NVM y Node para el usuario ec2-user
               su - ec2-user -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash"
-              su - ec2-user -c "source ~/.nvm/nvm.sh && nvm install 18"
+              su - ec2-user -c "source ~/.nvm/nvm.sh && nvm install 16"
 
-              # Clonamos el repositorio como ec2-user
-              su - ec2-user -c "git clone https://github.com/Roalex86180/proyecto_aws.git /home/ec2-user/app"
+              # 3. Clonar el repositorio
+              git clone https://github.com/Roalex86180/proyecto_aws.git /home/ec2-user/app
 
-              # Instalamos dependencias y configuramos variables
-              # Nota: La contraseña se maneja de forma segura
-              export DB_HOST=${aws_db_instance.app_db.address}
-              export DB_USER=${var.db_user}
-              export DB_PASSWORD='${var.db_password}'
-              export DB_NAME=${var.db_name}
-              export PORT=3001
+              # 4. Crear el archivo .env con comandos 'echo' (más fiable)
+              echo "PGHOST=${aws_db_instance.app_db.address}" > /home/ec2-user/app/backend/.env
+              echo "PGUSER=${var.db_user}" >> /home/ec2-user/app/backend/.env
+              echo "PGPASSWORD='${var.db_password}'" >> /home/ec2-user/app/backend/.env
+              echo "PGDATABASE=${var.db_name}" >> /home/ec2-user/app/backend/.env
+              echo "PGPORT=5432" >> /home/ec2-user/app/backend/.env
+              echo "PORT=3001" >> /home/ec2-user/app/backend/.env
 
-              # Creamos un script para iniciar la app y lo ejecutamos como ec2-user
-              cat <<'EOT' > /home/ec2-user/run_app.sh
-              #!/bin/bash
-              source /home/ec2-user/.nvm/nvm.sh
-              export DB_HOST=${aws_db_instance.app_db.address}
-              export DB_USER=${var.db_user}
-              export DB_PASSWORD='${var.db_password}'
-              export DB_NAME=${var.db_name}
-              export PORT=3001
-              cd /home/ec2-user/app
-              npm install
-              npm start
-              EOT
+              # 5. Cambiar el propietario de todos los archivos de la app a ec2-user
+              chown -R ec2-user:ec2-user /home/ec2-user/app
 
-              chown ec2-user:ec2-user /home/ec2-user/run_app.sh
-              chmod +x /home/ec2-user/run_app.sh
-
-              su - ec2-user -c "/home/ec2-user/run_app.sh > /home/ec2-user/app.log 2>&1 &"
-
+              # 6. Ejecutar la aplicación como ec2-user
+              su - ec2-user -c "cd /home/ec2-user/app/backend && source ~/.nvm/nvm.sh && npm install && npm start" > /home/ec2-user/app.log 2>&1 &
               EOF
   )
 
@@ -277,7 +266,189 @@ resource "aws_autoscaling_group" "app_asg" {
   target_group_arns = [aws_alb_target_group.app_tg.arn]
 }
 
-output "backend_url" {
-  description = "URL del Application Load Balancer para el backend."
-  value       = aws_alb.app_lb.dns_name
+
+# --- Frontend: S3 Bucket para React ---
+resource "aws_s3_bucket" "frontend_bucket" {
+  bucket = "mi-app-react-despliegue-final-unico"
 }
+
+# CORRECCIÓN: Configurar Object Ownership para OAC
+resource "aws_s3_bucket_ownership_controls" "frontend_bucket_ownership" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
+# CORRECCIÓN: Bloquear acceso público ya que usaremos OAC
+resource "aws_s3_bucket_public_access_block" "frontend_bucket_access" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+  
+  depends_on = [aws_s3_bucket_ownership_controls.frontend_bucket_ownership]
+}
+
+resource "aws_s3_bucket_website_configuration" "frontend_website_config" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+  
+  index_document {
+    suffix = "index.html"
+  }
+  
+  error_document {
+    key = "index.html"  # Para SPA routing
+  }
+}
+
+# CORRECCIÓN: Agregar OAC para mejor seguridad
+resource "aws_cloudfront_origin_access_control" "s3_oac" {
+  name                              = "S3-OAC"
+  description                       = "OAC for S3 bucket"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
+# CORRECCIÓN: Solo una política de bucket usando OAC
+resource "aws_s3_bucket_policy" "cloudfront_oac_policy" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+  
+  depends_on = [
+    aws_s3_bucket_ownership_controls.frontend_bucket_ownership,
+    aws_s3_bucket_public_access_block.frontend_bucket_access,
+    aws_cloudfront_origin_access_control.s3_oac
+  ]
+  
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        },
+        Action   = "s3:GetObject",
+        Resource = "${aws_s3_bucket.frontend_bucket.arn}/*",
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.s3_distribution.arn
+          }
+        }
+      }
+    ]
+  })
+}
+
+# --- Frontend: CloudFront para servir el contenido y la API ---
+resource "aws_cloudfront_distribution" "s3_distribution" {
+  enabled             = true
+  is_ipv6_enabled     = true
+  default_root_object = "index.html"
+  
+  # Origen #1 (por defecto): El bucket S3 con la UI
+  origin {
+    domain_name = aws_s3_bucket.frontend_bucket.bucket_regional_domain_name
+    origin_id   = "S3-Frontend"
+    
+    # Usar OAC (Origin Access Control) para acceso seguro
+    origin_access_control_id = aws_cloudfront_origin_access_control.s3_oac.id
+  }
+
+  # Origen #2: El backend para la API
+  origin {
+    domain_name = aws_alb.app_lb.dns_name
+    origin_id   = "ALB-Backend"
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "http-only"  # CloudFront -> ALB usa HTTP
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
+  # Comportamiento por defecto: Servir desde S3
+  default_cache_behavior {
+    target_origin_id       = "S3-Frontend"
+    viewer_protocol_policy = "redirect-to-https"  # Usuario -> CloudFront usa HTTPS
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+    
+    forwarded_values {
+      query_string = false
+      cookies { 
+        forward = "none" 
+      }
+    }
+    
+    min_ttl                = 0
+    default_ttl            = 3600
+    max_ttl                = 86400
+    compress               = true
+  }
+
+  # CORRECCIÓN: Comportamiento para la API con configuración adecuada
+  ordered_cache_behavior {
+    path_pattern           = "/api/*"
+    target_origin_id       = "ALB-Backend"
+    viewer_protocol_policy = "https-only"  # Usuario -> CloudFront usa HTTPS
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+    
+    # CORRECCIÓN: Configuración de forwarded_values para API
+    forwarded_values {
+      query_string = true
+      headers      = [
+        "Authorization",
+        "Content-Type",
+        "Accept",
+        "Origin",
+        "Referer",
+        "User-Agent"
+      ]
+      cookies { 
+        forward = "all" 
+      }
+    }
+    
+    # CORRECCIÓN: No cachear respuestas de API
+    min_ttl     = 0
+    default_ttl = 0
+    max_ttl     = 0
+    compress    = true
+  }
+
+  # Páginas de error personalizadas para SPA
+  custom_error_response {
+    error_code         = 404
+    response_code      = 200
+    response_page_path = "/index.html"
+  }
+  
+  custom_error_response {
+    error_code         = 403
+    response_code      = 200
+    response_page_path = "/index.html"
+  }
+
+  restrictions {
+    geo_restriction { 
+      restriction_type = "none" 
+    }
+  }
+  
+  viewer_certificate {
+    cloudfront_default_certificate = true
+  }
+  
+  tags = {
+    Name = "Frontend Distribution"
+  }
+}
+
+# Los outputs están definidos en archivo separado

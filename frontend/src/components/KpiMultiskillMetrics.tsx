@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 import { Dayjs } from 'dayjs';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface KpiData {
@@ -29,7 +29,7 @@ const fetchKpiMultiskill = async (
     fecha_inicio: fechaInicio ? fechaInicio.format('YYYY-MM-DD') : undefined,
     fecha_fin: fechaFin ? fechaFin.format('YYYY-MM-DD') : undefined,
   };
-  const { data } = await axios.get<KpiData[]>(`${API_URL}/api/kpi/multiskill`, { params });
+  const { data } = await axios.get<KpiData[]>(`/api/kpi/multiskill`, { params });
   return data;
 };
 
@@ -99,7 +99,7 @@ export default function KpiMultiskillMetrics() {
 // import axios from 'axios';
 // // ¡Ya no importamos FormControl, InputLabel, Select, MenuItem!
 // import { Box, Card, CardContent, Typography, CircularProgress } from '@mui/material';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 
 
 // // Interfaces para los datos y las props (esto no cambia)
@@ -128,7 +128,7 @@ export default function KpiMultiskillMetrics() {
 //       setLoading(true);
 //       setError(null); // Limpiamos errores anteriores en cada nueva búsqueda
 //       try {
-//         const response = await axios.get<KpiData[]>(`${API_URL}/api/kpi/multiskill`, {
+//         const response = await axios.get<KpiData[]>(`/api/kpi/multiskill`, {
 //           params: {
 //             propietario_red,
 //             fecha_inicio,

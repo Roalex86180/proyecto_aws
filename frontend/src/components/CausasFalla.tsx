@@ -12,7 +12,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useFilterStore } from '../store/filterStore';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // --- Interfaces (sin cambios) ---
 interface FallaData {
@@ -32,7 +32,7 @@ const fetchCausasFalla = async (
         fecha_inicio: fechaInicio,
         fecha_fin: fechaFin
     };
-    const response = await axios.get<FallaData[]>(`${API_URL}/api/calidad/causas-falla`, { params });
+    const response = await axios.get<FallaData[]>(`/api/calidad/causas-falla`, { params });
     // Hacemos el parseo aquí para que los datos de la query ya estén limpios
     return response.data.map(item => ({...item, total: Number(item.total)}));
 };
@@ -169,7 +169,7 @@ export default function CausasFalla() {
 //     Typography, Box, CircularProgress, Alert, Paper, Table, TableBody,
 //     TableCell, TableContainer, TableHead, TableRow
 // } from '@mui/material';
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 
 // // --- Interfaces ---
 // interface FallaData {
 //   comuna: string;
@@ -261,7 +261,7 @@ export default function CausasFalla() {
 //             fecha_fin: fecha_fin || defaultEndDate
 //         };
 
-//         const response = await axios.get<FallaData[]>(`${API_URL}/api/calidad/causas-falla`, { params });
+//         const response = await axios.get<FallaData[]>(`/api/calidad/causas-falla`, { params });
 //         const parsedData = response.data.map(item => ({...item, total: Number(item.total)}));
 //         setRawData(parsedData);
 //       } catch (err) {

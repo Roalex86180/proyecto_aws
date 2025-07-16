@@ -1,0 +1,14 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node app.js",
+    "migrate": "node-pg-migrate up"
+  },
+  "dependencies": {
+    "dotenv": "^...",
+    "express": "^...",
+    "pg": "^...",
+    "node-pg-migrate": "^..."
+  }
+}

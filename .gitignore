@@ -6,3 +6,4 @@
 terraform.tfvars
 node_modules/
 *.pem
+*sql
